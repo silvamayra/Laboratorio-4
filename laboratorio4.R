@@ -9,7 +9,7 @@
 ########################################
 
 
-# Importando librerías
+# Importando librer?as
 
 library(fitdistrplus)
 require(ggpubr) # Para mejorar la visualizaciÃ³n grÃ¡fica
@@ -33,8 +33,8 @@ library(arulesViz)
 library(dplyr)
 library(caret) # Muestreo estratificado
 library(class) # Para KNN
-
-setwd("C:/Users/smayr/Documents/Tercer año/Semestre 6/Data Science/Laboratorio 4/Laboratorio-4")
+library(imager)
+library(purrr)
 
 # Leyendo el dataset de csv importacion
 dataTrain <- read.csv("train.csv", TRUE, ",")
@@ -50,7 +50,7 @@ class(dataTest)
 
 
 
-#---------------------------- Análisis Exploratorio ------------------------------------
+#---------------------------- An?lisis Exploratorio ------------------------------------
 
 summary(dataTrain)
 
@@ -61,3 +61,20 @@ diagnofit <- fitdist(data$Diesel,"norm")
 
 plot(diagnofit)
 
+#---------------------------- An?lisis de imagen ------------------------------------
+
+# Aplicando escala de frises
+im <- load.image("/Users/quiebres/Documents/Ivan Maldonado/UVG/Sexto Semestre/Data Science/Laboratorio-4/test_images/0a2b5e1a0be8.png") %>% grayscale
+plot(im)
+
+# Detectando ovjetos pequeÃ±os
+
+isoblur(im,5) %>% get.centers("99.8%") %$% points(mx,my,col="red")
+
+
+scales <- seq(2,20,l=10)
+
+hessdet <- function(im,scale=1) isoblur(im,scale) %>% imhessian %$% { scale^2*(xx*yy - xy^2) }
+
+d.max <- map_il(scales,function(scale) hessdet(im,scale)) %>% parmax
+plot(d.max,main="Point-wise maximum across scales")
