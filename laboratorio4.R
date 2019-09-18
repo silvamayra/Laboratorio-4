@@ -52,6 +52,12 @@ class(dataTest)
 
 #---------------------------- Análisis Exploratorio ------------------------------------
 
+summary(dataTrain)
 
 #Ajuste de normalidad, para la variable diesel. 
-descdist(dataTrain$diagnosis, discrete= FALSE)
+descdist(dataTrain$diagnosis, discrete= TRUE)
+
+diagnofit <- fitdist(data$Diesel,"norm")
+
+plot(diagnofit)
+
